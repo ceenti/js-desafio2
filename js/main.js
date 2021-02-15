@@ -8,10 +8,6 @@ $(window).on("load", function () {
         document.getElementById("overlay").style.display = "none";
     }
 
-    // function changeView(value) {
-    //     window.location.assign(value+'.html');
-    // }
-
     function clickSave(content) {
       if (content.innerHTML == 'Saved') {
         content.innerHTML = 'Save';

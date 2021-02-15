@@ -6,9 +6,8 @@ $('.image-add-button').click( ()=> {
 let cardsCollection = {};
 let newPostObject = {
                     "date": moment().format("YYYY-MM-DD HH:mm:ss"),
-                    "name": "JuanPa",
-                    "lastName": "Sánchez",
-                    "savedPost": false
+                    "savedPost": false,
+                    "user_id": "60105e4ea5c08f13dd218a6f"
                     }
 let tagsArray = []
 $("input, textarea").change(event => {
@@ -20,11 +19,15 @@ $("input, textarea").change(event => {
 })
 const getCards = () =>{
     $.ajax({
-        url: "https://cards-6f1a0-default-rtdb.firebaseio.com/.json",
+        url: "http://localhost:8080/posts",
         method: "GET",
+        headers: {
+            "Authorization": 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMTA1ZTRlYTVjMDhmMTNkZDIxOGE2ZiIsImlhdCI6MTYxMTcwMDc4OH0.Xe59mKp66fcD1wUeNWHJ_WCioUBsn4dfVp_mpGkMCPM'
+        },
         success: response => {
-            cardsCollection = response; 
-
+            cardsCollection = response.data; 
+            console.log(typeof(cardsCollection))
+            //console.log(sortCurrentPosts(cardsCollection))
             printCards("feed", sortCurrentPosts(cardsCollection))  
         },
         error: error => {
@@ -94,7 +97,11 @@ const printCards = (placeToPrint, cardsToPrint) => {
         $(`#pills-${placeToPrint}`).prepend(entryCard);
     }
 }
-
+let email = localStorage.getItem("email")
+let token = localStorage.getItem("token")
+if(!email || !token){
+   window.location.href = "login.html?sessionExpired=true"
+}
 getCards();
 
 // Añadir eventHandler a button dinámico
@@ -122,13 +129,17 @@ const saveReadingList = (id, savedValue) => {
 }
 
 const savePost = newPost => {
-
+ console.log(typeof(newPost))
     $.ajax({
-        url: "https://cards-6f1a0-default-rtdb.firebaseio.com/.json",
+        url: "http://localhost:8080/posts",
         method: "POST",
         data: JSON.stringify(newPost),
+        headers: {
+            "Content-Type":"application/json",
+            "Authorization": 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMTA1ZTRlYTVjMDhmMTNkZDIxOGE2ZiIsImlhdCI6MTYxMTcwMDc4OH0.Xe59mKp66fcD1wUeNWHJ_WCioUBsn4dfVp_mpGkMCPM'
+        },
         success: response => {
-             
+             console.log('Se guardó el post')
         },
         error: error => {
             console.log( error )
